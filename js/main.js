@@ -1,7 +1,8 @@
-//main.js
+// 
 // this is making adventure cave game happen.
-//toturials:  
-//https://www.youtube.com/watch?v=b6A4XHkTjs8
+// toturials:  
+// https://www.youtube.com/watch?v=b6A4XHkTjs8
+// https://phaser.io/news/2015/03/flappy-bird-tutorial
 
 // ========== variables ===========
 // Always define global varriables before functions and calls;
@@ -61,43 +62,30 @@ function create(){
 	music = game.add.audio('music');
 	music.play();
 	swoosh = game.add.audio('swoosh');
+	die = game.add.audio('die');
+	hit = game.add.audio('hit');
+	point = game.add.audio('point');
+	wing = game.add.audio('wing');
 
 	//creates the person charactor in the window and added gravity
 	person = game.add.sprite(260, 200, 'flap');
 	game.physics.arcade.enable(person);
 	person.score = 0;
 	//person.body.collideWorldBounds = true;
-	person.body.gravity.y=800;
-	person.animations.add('flap', [0, 1], 10, true);
-	person.play('flap');
+	person.body.gravity.y = 900;
+	person.animations.add('flap', [0, 1], 20, true);
 	
-
-	//create flap 
-	// flap = game.add.sprite(70, 43, 'flap');
-	// flap.setAll('outOfBoundsKill', true);
-	// flap.setAll('checkWorldBounds',true);
-
 
 	//======< to create pipes as obstacles =======>
 	// create pipe in a group 
 	pipes = game.add.group();
 	//create pipe regarding to the screen position x, and y
 	pipes.enableBody = true;
-	//add to the pipes created
-	//game.physics.arcade.enable(pipe);
-	// pipes.enableBody = true;
 	pipes.physicsBodyType = Phaser.Physics.ARCADE;
-	pipes.createMultiple(8, 'pipeUp');
+	// pipes.createMultiple(8, 'pipeUp');
 	//pipes will be removed if they are nolonger visible. 
 	pipes.setAll('outOfBoundsKill', true);
 	pipes.setAll('checkWorldBounds', true);
-
-
-	// randyX = randy(900, 1200);
-	// pipes[i] = game.add.sprite(randyX, randy(300, 500), 'pipe');
-	// pipeDown[i] = game.add.sprite(randyX, randy(-75,0), 'pipeDown');
-
-
 	// Create the pipes in a loop: 
 	game.time.events.loop(Phaser.Timer.SECOND * 2, spawnPipes);
 
@@ -113,6 +101,7 @@ function create(){
 
 // updates the game logic;
 function update(){
+	person.play('flap');
 	if (person.angle < 20) {
 		person.angle += 1;
 	}
@@ -132,7 +121,7 @@ function update(){
 	// }
 		// the person is going down
 	// this function is the collision detection
-	game.physics.arcade.overlap(person, pipes);
+	game.physics.arcade.overlap(person, pipes, hitPipe);
 
 	
 }
@@ -141,28 +130,28 @@ function update(){
 function spawnPipes(){
 	console.log('pipes creating is called! ');
 	//var pipe = pipes.getFirstExists(false);
-	//pipe.body.velocity.x = -250;
-	if (Math.floor((Math.random()*10)+1) < 3) {
+	var ranNum = Math.floor((Math.random()*10)+1);
+	if (ranNum < 3) {
 		pipe = pipes.create(800, 425, 'pipeUp');
 		pipeDown = pipes.create(800, 0, 'pipeDown');
 		pipe.body.velocity.x = -130;
 		pipeDown.body.velocity.x = -130;
-	}else if (Math.floor((Math.random()*10)+1) < 5) {
+	}else if (ranNum < 5) {
 		pipe = pipes.create(800, 375, 'pipeUp');
 		pipeDown = pipes.create(800, -50, 'pipeDown');
 		pipe.body.velocity.x = -130;
 		pipeDown.body.velocity.x = -130;
-	}else if (Math.floor((Math.random()*10)+1) < 7) {
+	}else if (ranNum < 7) {
 		pipe = pipes.create(800, 325, 'pipeUp');
 		pipeDown = pipes.create(800, -100, 'pipeDown');
 		pipe.body.velocity.x = -130;
 		pipeDown.body.velocity.x = -130;
-	}else if (Math.floor((Math.random()*10)+1) < 9) {
+	}else if (ranNum < 9) {
 		pipe = pipes.create(800, 275, 'pipeUp');
 		pipeDown = pipes.create(800, -150, 'pipeDown');
 		pipe.body.velocity.x = -130;
 		pipeDown.body.velocity.x = -130;
-	}else if (Math.floor((Math.random()*10)+1) < 11) {
+	}else if (ranNum < 11) {
 		pipe = pipes.create(800, 225, 'pipeUp');
 		pipeDown = pipes.create(800, -200, 'pipeDown');
 		pipe.body.velocity.x = -130;
@@ -175,8 +164,26 @@ function spawnPipes(){
 	}
 }
 
+function hitPipe(){
+	console.log('hit');
+	hit.play();
+	person.kill();
+	gameOver();
+}
 
-
+function gameOver() {
+	music.pause();
+	swal({
+		title: 'Good job!',
+		text: 'Thanks for playing!',
+		type: 'warning', 
+		showCancel: false,
+		confirmButtonText: 'Cool',
+		closeOnConfirm: true
+	});
+	//game.time.events.stop();
+	//gameOverText = game.add.text(300, 200, 'Score: ' + player.score.toString(), {font: '45px oblique', fill: '#fff'});
+}
 
 
 

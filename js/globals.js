@@ -6,3 +6,4 @@ var GAME_WIDTH = 800;
 var pPosition;
 var pVelocity;
 var pAcceleration;
+var scoreText, gameOverText;
