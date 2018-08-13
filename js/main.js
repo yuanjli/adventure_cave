@@ -32,22 +32,22 @@ function preload() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 
 	//preload the image files: 
-	game.load.image('bg', '../assets/img/cave_bg.png');
-	game.load.image('person', '../assets/img/down_char.png');
-	game.load.image('pipeUp', '../assets/img/red_pipe.png');
-	game.load.image('pipeDown', '../assets/img/red_pipe_down.png');
-	game.load.image('floor', '../assets/img/floor_bg.png');
+	game.load.image('bg', './assets/img/cave_bg.png');
+	game.load.image('person', './assets/img/down_char.png');
+	game.load.image('pipeUp', './assets/img/red_pipe.png');
+	game.load.image('pipeDown', './assets/img/red_pipe_down.png');
+	game.load.image('floor', './assets/img/floor_bg.png');
 
 	//load animations
-	game.load.spritesheet('flap', '../assets/img/flap_character.png', 70, 43);
+	game.load.spritesheet('flap', './assets/img/flap_character.png', 70, 43);
 
 	//load audio files for later uses:
-	game.load.audio('music', '../assets/audio/among-the-clouds.mp3');
-	game.load.audio('die', '../assets/audio/die.wav');
-	game.load.audio('hit', '../assets/audio/hit.wav');
-	game.load.audio('point', '../assets/audio/point.wav');
-	game.load.audio('swoosh', '../assets/audio/swoosh.wav');
-	game.load.audio('wing', '../assets/audio/wing.wav');
+	game.load.audio('music', './assets/audio/among-the-clouds.mp3');
+	game.load.audio('die', './assets/audio/die.wav');
+	game.load.audio('hit', './assets/audio/hit.wav');
+	game.load.audio('point', './assets/audio/point.wav');
+	game.load.audio('swoosh', './assets/audio/swoosh.wav');
+	game.load.audio('wing', './assets/audio/wing.wav');
 }
 
 // create the game elements;
