@@ -9,7 +9,7 @@
 var person, cursors;
 
 
-console.log('Game is starting! ');
+console.log('main.js loaded, Game is starting! ');
 // create the game start: 
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'game', {
 	init: init,
@@ -18,30 +18,27 @@ var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'game', {
 	update: update
 });
 
-
-
-
-
-//  =======    = = ===================
+//  ==================================
 // Initialize the game;
 function init() {
 	console.log('init');
 }
 // Set the game Physics;
 function preload() {
+	// Initialize arcade physics:
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	//preload the image files: 
+	// Preload the image files: 
 	game.load.image('bg', './assets/img/cave_bg.png');
 	game.load.image('person', './assets/img/down_char.png');
 	game.load.image('pipeUp', './assets/img/red_pipe.png');
 	game.load.image('pipeDown', './assets/img/red_pipe_down.png');
 	game.load.image('floor', './assets/img/floor_bg.png');
 
-	//load animations
+	// Load animations
 	game.load.spritesheet('flap', './assets/img/flap_character.png', 70, 43);
 
-	//load audio files for later uses:
+	// Load audio files for later uses:
 	game.load.audio('music', './assets/audio/among-the-clouds.mp3');
 	game.load.audio('die', './assets/audio/die.wav');
 	game.load.audio('hit', './assets/audio/hit.wav');
@@ -50,7 +47,7 @@ function preload() {
 	game.load.audio('wing', './assets/audio/wing.wav');
 }
 
-// create the game elements;
+// Create the game elements;
 function create(){
 	// this sets up the background image and auto slides to the left:
 	var background = game.add.tileSprite(0, 0, game.width, game.height, 'bg');
@@ -74,7 +71,8 @@ function create(){
 	//person.body.collideWorldBounds = true;
 	person.body.gravity.y = 900;
 	person.animations.add('flap', [0, 1], 20, true);
-	
+	person.score = 0;
+	person.topScore = localStorage.getItem('bestScore') == null ? 0 : localStorage.getItem('bestScore');
 
 	//======< to create pipes as obstacles =======>
 	// create pipe in a group 
@@ -88,6 +86,7 @@ function create(){
 	pipes.setAll('checkWorldBounds', true);
 	// Create the pipes in a loop: 
 	game.time.events.loop(Phaser.Timer.SECOND * 2, spawnPipes);
+	game.time.events.loop(Phaser.Timer.SECOND * 2, addScore);
 
 	// need those two lines to stop the browser functions interference with the game.
 	cursors = game.input.keyboard.createCursorKeys();
@@ -95,12 +94,13 @@ function create(){
 
 	//Add Score and HP text to the screen: 
 	//hpText = game.add.text(GAME_WIDTH - 130, 20, 'Life: ' + player.life.toString(), {fill: '#fff'});
+	topScoreText = game.add.text(20, 20, 'Top Score: ' + person.topScore.toString(), {fill: '#fff'});
 	scoreText = game.add.text(GAME_WIDTH - 135, GAME_HEIGHT - 480, 'Score: ' + person.score.toString(), {fill: '#fff'});
-
 }
 
-// updates the game logic;
+// Updates the game logic;
 function update(){
+
 	person.play('flap');
 	if (person.angle < 20) {
 		person.angle += 1;
@@ -112,18 +112,19 @@ function update(){
 		person.anchor.setTo(-0.2, 0.5); 
 		swoosh.play();
 		//person.play('flap');
-
 	}
 	else {
 		person.animations.stop();
 	}
-	// else if (pVelocity>0) {
-	// }
-		// the person is going down
+	// Todo: if the person hits the floor, gameOver
+	if (person.y < 0 || person.y > game.height) {
+		hit.play();
+		gameOver();
+	} 
 	// this function is the collision detection
-	game.physics.arcade.overlap(person, pipes, hitPipe);
-
-	
+	// console.log(game.physics.arcade.overlap(person, pipes, hitPipe));
+	// console.log('==******************>', game.physics.arcade.overlap(person, pipes, hitPipe));
+	game.physics.arcade.overlap(person, pipes, hitPipe);	
 }
 
 // ===========<pipes> ===============
@@ -164,6 +165,19 @@ function spawnPipes(){
 	}
 }
 
+
+function addScore(){
+	// console.log('================>', game.physics.arcade.overlap(person, pipes, hitPipe));
+	if (person.y < 0 || person.y > game.height || game.physics.arcade.overlap(person, pipes, hitPipe)) {
+		return person.score;
+	} else {
+		setTimeout(function() { person.score += 1 }, 3000);
+	};
+//	person.score += amount;
+	scoreText.text = 'Score: ' + person.score.toString();
+}
+
+
 function hitPipe(){
 	console.log('hit');
 	hit.play();
@@ -173,6 +187,8 @@ function hitPipe(){
 
 function gameOver() {
 	music.pause();
+	localStorage.setItem('bestScore', Math.max(person.score, person.topScore));
+	game.paused = true;
 	swal({
 		title: 'Good job!',
 		text: 'Thanks for playing!',
