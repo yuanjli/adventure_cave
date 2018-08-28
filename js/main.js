@@ -67,7 +67,6 @@ function create(){
 	//person.body.collideWorldBounds = true;
 	person.body.gravity.y = 900;
 	person.animations.add('flap', [0, 1], 20, true);
-	person.score = 0;
 	person.topScore = localStorage.getItem('bestScore') == null ? 0 : localStorage.getItem('bestScore');
 
 	//======< to create pipes as obstacles =======>
@@ -161,7 +160,16 @@ function spawnPipes(){
 	}
 }
 
-
+function addScore(){
+	// console.log('================>', game.physics.arcade.overlap(person, pipes, hitPipe));
+	if (person.y < 0 || person.y > game.height || game.physics.arcade.overlap(person, pipes, hitPipe)) {
+		return person.score;
+	} else {
+		setTimeout(function() { person.score += 1 }, 3500);
+	};
+//	person.score += amount;
+scoreText.text = 'Score: ' + person.score.toString();
+}
 
 
 function hitPipe(){
