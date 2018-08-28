@@ -1,8 +1,4 @@
-// 
-// this is making adventure cave game happen.
-// toturials:  
-// https://www.youtube.com/watch?v=b6A4XHkTjs8
-// https://phaser.io/news/2015/03/flappy-bird-tutorial
+// This is the main javaScript for the Game
 
 // ========== variables ===========
 // Always define global varriables before functions and calls;
