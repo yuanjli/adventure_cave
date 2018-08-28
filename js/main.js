@@ -1,4 +1,4 @@
-// This is the main javaScript for the Game
+// The main javaScript for the Game;
 
 // ========== variables ===========
 // Always define global varriables before functions and calls;
@@ -162,16 +162,6 @@ function spawnPipes(){
 }
 
 
-function addScore(){
-	// console.log('================>', game.physics.arcade.overlap(person, pipes, hitPipe));
-	if (person.y < 0 || person.y > game.height || game.physics.arcade.overlap(person, pipes, hitPipe)) {
-		return person.score;
-	} else {
-		setTimeout(function() { person.score += 1 }, 3500);
-	};
-//	person.score += amount;
-	scoreText.text = 'Score: ' + person.score.toString();
-}
 
 
 function hitPipe(){
@@ -185,25 +175,26 @@ function gameOver() {
 	music.pause();
 	localStorage.setItem('bestScore', Math.max(person.score, person.topScore));
 	game.paused = true;
+	
 	if (person.score >= 100) {
 		swal({
-		title: 'You Win!',
-		text: 'Thanks for playing!',
-		type: 'warning', 
-		showCancel: false,
-		confirmButtonText: 'Awesome',
-		closeOnConfirm: true
-	}); }
-	 else {
-	swal({
-		title: 'Great job!',
-		text: 'Thanks for playing, you can do better!',
-		type: 'warning', 
-		showCancel: false,
-		confirmButtonText: 'Cool',
-		closeOnConfirm: true
-	});
-}
+			title: 'You Win!',
+			text: 'Thanks for playing!',
+			type: 'warning', 
+			showCancel: false,
+			confirmButtonText: 'Awesome',
+			closeOnConfirm: true
+		}); }
+		else {
+			swal({
+				title: 'Great job!',
+				text: 'Thanks for playing, you can do better!',
+				type: 'warning', 
+				showCancel: false,
+				confirmButtonText: 'Cool',
+				closeOnConfirm: true
+			});
+		}
 	//game.time.events.stop();
 	//gameOverText = game.add.text(300, 200, 'Score: ' + player.score.toString(), {font: '45px oblique', fill: '#fff'});
 }
