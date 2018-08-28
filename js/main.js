@@ -7,6 +7,7 @@ var person, cursors;
 
 console.log('main.js loaded, Game is starting! ');
 // create the game start: 
+
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'game', {
 	init: init,
 	preload: preload,
@@ -64,10 +65,11 @@ function create(){
 	person = game.add.sprite(260, 200, 'flap');
 	game.physics.arcade.enable(person);
 	person.score = 0;
-	//person.body.collideWorldBounds = true;
+	// person.body.collideWorldBounds = true;
 	person.body.gravity.y = 900;
 	person.animations.add('flap', [0, 1], 20, true);
-	person.topScore = localStorage.getItem('bestScore') == null ? 0 : localStorage.getItem('bestScore');
+	// Local storage for highest scores;
+	person.topScore = localStorage.getItem('bestScore') == null ? 0 : localStorage.getItem('bestScore'); 
 
 	//======< to create pipes as obstacles =======>
 	// create pipe in a group 
@@ -167,8 +169,8 @@ function addScore(){
 	} else {
 		setTimeout(function() { person.score += 1 }, 3500);
 	};
-//	person.score += amount;
-scoreText.text = 'Score: ' + person.score.toString();
+	// person.score += amount;
+	scoreText.text = 'Score: ' + person.score.toString();
 }
 
 
@@ -192,6 +194,8 @@ function gameOver() {
 			showCancel: false,
 			confirmButtonText: 'Awesome',
 			closeOnConfirm: true
+		}, function(){ 
+			location.reload();
 		}); }
 		else {
 			swal({
@@ -201,13 +205,16 @@ function gameOver() {
 				showCancel: false,
 				confirmButtonText: 'Cool',
 				closeOnConfirm: true
+			}, function(){ 
+				location.reload();
 			});
 		}
 	//game.time.events.stop();
 	//gameOverText = game.add.text(300, 200, 'Score: ' + player.score.toString(), {font: '45px oblique', fill: '#fff'});
 }
 
-
+// restart the game function;
+// game.state.restart();
 
 
 
